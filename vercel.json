@@ -19,10 +19,5 @@
     "VITE_API_URL": "@vite_api_url",
     "VITE_UPLOAD_URL": "@vite_upload_url",
     "VITE_PRIVY_APP_ID": "@vite_privy_app_id"
-  },
-  "functions": {
-    "src/supabase/functions/**/*.tsx": {
-      "runtime": "nodejs18.x"
-    }
   }
 }
