@@ -1,0 +1,21 @@
+# Vercel Environment Variables
+# Copy these to your Vercel project settings
+
+# API Configuration
+VITE_API_URL=https://your-supabase-project.supabase.co/functions/v1
+VITE_UPLOAD_URL=https://your-supabase-project.supabase.co/functions/v1/upload
+
+# Privy Wallet Configuration
+VITE_PRIVY_APP_ID=your-privy-app-id
+
+# Supabase Configuration (if needed)
+VITE_SUPABASE_URL=https://your-supabase-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Optional: Analytics and Monitoring
+VITE_ANALYTICS_ID=your-analytics-id
+VITE_SENTRY_DSN=your-sentry-dsn
+
+# Optional: Feature Flags
+VITE_ENABLE_ANALYTICS=true
+VITE_ENABLE_ERROR_REPORTING=true
