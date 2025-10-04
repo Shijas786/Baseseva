@@ -1,13 +1,9 @@
--- BaseSeva Database Schema
+-- BaseSeva Database Schema - Simple Version
 -- Web3 Blood Donation App
-
--- Enable necessary extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "postgis";
 
 -- Users table
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     wallet_address TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
     email TEXT,
@@ -22,14 +18,15 @@ CREATE TABLE users (
     streak INTEGER DEFAULT 0,
     impact_points INTEGER DEFAULT 0,
     profile_complete BOOLEAN DEFAULT false,
-    location POINT, -- PostGIS point for user location
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Blood requests table
 CREATE TABLE blood_requests (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     patient_name TEXT NOT NULL,
     blood_type TEXT NOT NULL CHECK (blood_type IN ('O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-')),
@@ -38,7 +35,8 @@ CREATE TABLE blood_requests (
     description TEXT,
     units_needed INTEGER DEFAULT 1 CHECK (units_needed > 0),
     urgency TEXT DEFAULT 'normal' CHECK (urgency IN ('critical', 'urgent', 'normal')),
-    location POINT, -- PostGIS point for request location
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8),
     city TEXT,
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'fulfilled', 'expired', 'cancelled')),
     verified BOOLEAN DEFAULT false,
@@ -49,7 +47,7 @@ CREATE TABLE blood_requests (
 
 -- Donations table
 CREATE TABLE donations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     blood_type TEXT NOT NULL CHECK (blood_type IN ('O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-')),
     donation_date TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -62,11 +60,12 @@ CREATE TABLE donations (
 
 -- Blood banks table
 CREATE TABLE blood_banks (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     address TEXT NOT NULL,
     phone TEXT,
-    coordinates POINT NOT NULL, -- PostGIS point
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
     open_hours JSONB, -- Store as JSON for flexible hours
     blood_types TEXT[] DEFAULT '{}', -- Array of supported blood types
     status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closing_soon', 'closed')),
@@ -80,7 +79,7 @@ CREATE TABLE blood_banks (
 
 -- Notifications table
 CREATE TABLE notifications (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     type TEXT NOT NULL CHECK (type IN ('blood_request', 'donation_verified', 'nft_minted', 'emergency_alert', 'system')),
     title TEXT NOT NULL,
@@ -92,7 +91,7 @@ CREATE TABLE notifications (
 
 -- Donation responses table (for tracking who responded to blood requests)
 CREATE TABLE donation_responses (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     request_id UUID REFERENCES blood_requests(id) ON DELETE CASCADE,
     donor_id UUID REFERENCES users(id) ON DELETE CASCADE,
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'completed')),
@@ -106,19 +105,16 @@ CREATE TABLE donation_responses (
 CREATE INDEX idx_users_wallet_address ON users(wallet_address);
 CREATE INDEX idx_users_blood_type ON users(blood_type);
 CREATE INDEX idx_users_city ON users(city);
-CREATE INDEX idx_users_location ON users USING GIST(location);
 
 CREATE INDEX idx_blood_requests_blood_type ON blood_requests(blood_type);
 CREATE INDEX idx_blood_requests_urgency ON blood_requests(urgency);
 CREATE INDEX idx_blood_requests_status ON blood_requests(status);
-CREATE INDEX idx_blood_requests_location ON blood_requests USING GIST(location);
 CREATE INDEX idx_blood_requests_created_at ON blood_requests(created_at);
 
 CREATE INDEX idx_donations_user_id ON donations(user_id);
 CREATE INDEX idx_donations_donation_date ON donations(donation_date);
 CREATE INDEX idx_donations_verified ON donations(verified);
 
-CREATE INDEX idx_blood_banks_location ON blood_banks USING GIST(coordinates);
 CREATE INDEX idx_blood_banks_status ON blood_banks(status);
 CREATE INDEX idx_blood_banks_verified ON blood_banks(verified);
 
@@ -146,7 +142,7 @@ CREATE TRIGGER update_blood_banks_updated_at BEFORE UPDATE ON blood_banks FOR EA
 CREATE TRIGGER update_donation_responses_updated_at BEFORE UPDATE ON donation_responses FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Insert sample blood banks data
-INSERT INTO blood_banks (name, address, phone, coordinates, open_hours, blood_types, status, rating, verified, emergency, inventory) VALUES
-('Kerala State Blood Transfusion Council', 'Medical College Campus, Thiruvananthapuram, Kerala 695011', '+91 471 2524251', ST_Point(76.9366, 8.5241), '{"24_hours": true}', ARRAY['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], 'open', 4.8, true, true, '{"O+": "high", "O-": "medium", "A+": "high", "A-": "low", "B+": "medium", "B-": "critical", "AB+": "low", "AB-": "critical"}'),
-('IMA Blood Bank - Kochi', 'IMA House, Kaloor, Ernakulam, Kochi, Kerala 682017', '+91 484 2345678', ST_Point(76.2673, 9.9312), '{"start": "06:00", "end": "22:00"}', ARRAY['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], 'open', 4.6, true, false, '{"O+": "medium", "O-": "low", "A+": "high", "A-": "medium", "B+": "high", "B-": "low", "AB+": "medium", "AB-": "low"}'),
-('Kozhikode Medical College Blood Bank', 'Medical College, Kozhikode, Kerala 673008', '+91 495 2359126', ST_Point(75.7804, 11.2588), '{"start": "08:00", "end": "20:00"}', ARRAY['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], 'closing_soon', 4.4, true, false, '{"O+": "low", "O-": "critical", "A+": "medium", "A-": "low", "B+": "medium", "B-": "critical", "AB+": "low", "AB-": "critical"}');
+INSERT INTO blood_banks (name, address, phone, latitude, longitude, open_hours, blood_types, status, rating, verified, emergency, inventory) VALUES
+('Kerala State Blood Transfusion Council', 'Medical College Campus, Thiruvananthapuram, Kerala 695011', '+91 471 2524251', 8.5241, 76.9366, '{"24_hours": true}', ARRAY['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], 'open', 4.8, true, true, '{"O+": "high", "O-": "medium", "A+": "high", "A-": "low", "B+": "medium", "B-": "critical", "AB+": "low", "AB-": "critical"}'),
+('IMA Blood Bank - Kochi', 'IMA House, Kaloor, Ernakulam, Kochi, Kerala 682017', '+91 484 2345678', 9.9312, 76.2673, '{"start": "06:00", "end": "22:00"}', ARRAY['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], 'open', 4.6, true, false, '{"O+": "medium", "O-": "low", "A+": "high", "A-": "medium", "B+": "high", "B-": "low", "AB+": "medium", "AB-": "low"}'),
+('Kozhikode Medical College Blood Bank', 'Medical College, Kozhikode, Kerala 673008', '+91 495 2359126', 11.2588, 75.7804, '{"start": "08:00", "end": "20:00"}', ARRAY['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'], 'closing_soon', 4.4, true, false, '{"O+": "low", "O-": "critical", "A+": "medium", "A-": "low", "B+": "medium", "B-": "critical", "AB+": "low", "AB-": "critical"}');
