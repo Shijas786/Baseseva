@@ -9,6 +9,8 @@ export function WalletConflictResolver() {
   useEffect(() => {
     // Suppress wallet extension conflicts in console
     const originalError = console.error;
+    const originalWarn = console.warn;
+    
     console.error = (...args) => {
       const message = args[0]?.toString() || '';
       
@@ -18,7 +20,12 @@ export function WalletConflictResolver() {
         message.includes('Cannot redefine property: ethereum') ||
         message.includes('MetaMask encountered an error setting the global Ethereum provider') ||
         message.includes('Razor Wallet Injected Successfully') ||
-        message.includes('Nightly Wallet Injected Successfully')
+        message.includes('Nightly Wallet Injected Successfully') ||
+        message.includes('evmAsk.js') ||
+        message.includes('inpage.js') ||
+        message.includes('contentScript.ts') ||
+        message.includes('Cannot redefine property') ||
+        message.includes('TypeError: Cannot set property ethereum')
       ) {
         // Silently ignore these wallet extension conflicts
         return;
@@ -28,9 +35,26 @@ export function WalletConflictResolver() {
       originalError.apply(console, args);
     };
 
+    console.warn = (...args) => {
+      const message = args[0]?.toString() || '';
+      
+      // Filter out wallet extension warnings
+      if (
+        message.includes('MetaMask') ||
+        message.includes('wallet extension') ||
+        message.includes('ethereum provider')
+      ) {
+        return;
+      }
+      
+      // Log other warnings normally
+      originalWarn.apply(console, args);
+    };
+
     // Clean up on unmount
     return () => {
       console.error = originalError;
+      console.warn = originalWarn;
     };
   }, []);
 
