@@ -21,12 +21,13 @@
    - Go to Project Settings → Environment Variables
    - Add the following variables (see `vercel-env-example.txt` for values):
      ```
-     VITE_API_URL
-     VITE_UPLOAD_URL
-     VITE_PRIVY_APP_ID
-     VITE_SUPABASE_URL (optional)
-     VITE_SUPABASE_ANON_KEY (optional)
+     VITE_API_URL = https://your-supabase-project.supabase.co/functions/v1
+     VITE_UPLOAD_URL = https://your-supabase-project.supabase.co/functions/v1/upload
+     VITE_PRIVY_APP_ID = your-privy-app-id
+     VITE_SUPABASE_URL = https://your-supabase-project.supabase.co (optional)
+     VITE_SUPABASE_ANON_KEY = your-supabase-anon-key (optional)
      ```
+   - **Important:** Set these as regular environment variables, NOT as secrets
 
 6. **Deploy:**
    - Click "Deploy"
@@ -58,6 +59,18 @@
 
 ## Environment Variables Setup
 
+### How to Set Environment Variables in Vercel:
+
+1. **Go to your project dashboard on Vercel**
+2. **Click on "Settings" tab**
+3. **Click on "Environment Variables" in the sidebar**
+4. **Add each variable:**
+   - Click "Add New"
+   - Enter the variable name (e.g., `VITE_API_URL`)
+   - Enter the variable value
+   - Select environments (Production, Preview, Development)
+   - Click "Save"
+
 ### Required Variables:
 - `VITE_API_URL`: Your Supabase functions URL
 - `VITE_UPLOAD_URL`: Your file upload endpoint
@@ -68,6 +81,13 @@
 - `VITE_SUPABASE_ANON_KEY`: Supabase anonymous key
 - `VITE_ANALYTICS_ID`: Analytics tracking ID
 - `VITE_SENTRY_DSN`: Error reporting DSN
+
+### Example Values:
+```
+VITE_API_URL = https://abcdefgh.supabase.co/functions/v1
+VITE_UPLOAD_URL = https://abcdefgh.supabase.co/functions/v1/upload
+VITE_PRIVY_APP_ID = clx1234567890abcdef
+```
 
 ## Post-Deployment
 
