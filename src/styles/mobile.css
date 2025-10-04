@@ -1,0 +1,244 @@
+/* Mobile-First Responsive CSS */
+
+/* Touch-friendly interactions */
+.touch-friendly {
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Responsive spacing utilities */
+.mobile-container {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 480px) {
+  .mobile-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Responsive grid system */
+.responsive-grid-mobile {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid-mobile.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .responsive-grid-mobile.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-grid-mobile {
+    gap: 20px;
+  }
+  .responsive-grid-mobile.cols-2 {
+    gap: 20px;
+  }
+  .responsive-grid-mobile.cols-3 {
+    gap: 20px;
+  }
+}
+
+/* Mobile button styles */
+.btn-mobile {
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .btn-mobile {
+    padding: 12px 24px;
+    font-size: 16px;
+    min-height: 40px;
+  }
+}
+
+.btn-mobile-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+}
+
+.btn-mobile-secondary {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  border: 1px solid var(--border);
+}
+
+/* Mobile-specific animations */
+@media (max-width: 768px) {
+  .reduce-motion {
+    animation-duration: 0.5s !important;
+    transition-duration: 0.2s !important;
+  }
+  
+  .floating-particles {
+    opacity: 0.4;
+  }
+  
+  /* Mobile-specific scroll optimizations */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Mobile-optimized focus states */
+  .mobile-focus:focus {
+    outline: 3px solid rgba(220, 38, 38, 0.3);
+    outline-offset: 2px;
+  }
+  
+  /* Mobile-specific card optimizations */
+  .mobile-card-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+/* Safe area utilities */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.safe-left {
+  padding-left: env(safe-area-inset-left, 0);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+/* Touch feedback */
+.touch-feedback {
+  position: relative;
+  overflow: hidden;
+}
+
+.touch-feedback:active::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  to {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+}
+
+/* Optimized card styles */
+.card-mobile {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(229, 231, 235, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .card-mobile {
+    border-radius: 16px;
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-mobile {
+    border-radius: 20px;
+    padding: 32px;
+  }
+}
+
+.card-mobile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Text scaling */
+.text-mobile-sm {
+  font-size: 14px;
+}
+
+.text-mobile-base {
+  font-size: 16px;
+}
+
+.text-mobile-lg {
+  font-size: 18px;
+}
+
+@media (min-width: 768px) {
+  .text-mobile-sm {
+    font-size: 16px;
+  }
+  .text-mobile-base {
+    font-size: 18px;
+  }
+  .text-mobile-lg {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-mobile-sm {
+    font-size: 18px;
+  }
+  .text-mobile-base {
+    font-size: 20px;
+  }
+  .text-mobile-lg {
+    font-size: 24px;
+  }
+}

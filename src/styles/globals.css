@@ -1,0 +1,869 @@
+@import "./mobile.css";
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Professional Design System */
+  --font-size: 16px;
+  
+  /* Core Colors */
+  --background: #ffffff;
+  --foreground: #111827;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  
+  /* Brand Colors */
+  --primary: #dc2626;
+  --primary-hover: #b91c1c;
+  --primary-foreground: #ffffff;
+  
+  --secondary: #f8fafc;
+  --secondary-hover: #f1f5f9;
+  --secondary-foreground: #374151;
+  
+  /* Semantic Colors */
+  --success: #059669;
+  --success-light: #d1fae5;
+  --warning: #d97706;
+  --warning-light: #fef3c7;
+  --error: #dc2626;
+  --error-light: #fee2e2;
+  --info: #2563eb;
+  --info-light: #dbeafe;
+  
+  /* Blood Donation Theme */
+  --blood: #dc2626;
+  --blood-light: #fef2f2;
+  --blood-dark: #991b1b;
+  
+  /* Text Colors */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-inverse: #ffffff;
+  
+  /* Border & Divider */
+  --border: #e5e7eb;
+  --border-strong: #d1d5db;
+  --divider: #f3f4f6;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  
+  /* Spacing Scale */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  
+  /* Typography */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Interactive States */
+  --hover-overlay: rgba(0, 0, 0, 0.04);
+  --active-overlay: rgba(0, 0, 0, 0.08);
+  --focus-ring: 0 0 0 3px rgba(79, 70, 229, 0.12);
+  
+  /* Layout */
+  --container-padding: 20px;
+  --section-spacing: 40px;
+  --card-padding: 24px;
+}
+
+.dark {
+  /* Dark Mode Professional */
+  --background: #0c0c0d;
+  --foreground: #fafbfc;
+  --surface: #161618;
+  --surface-elevated: #1c1c1e;
+  
+  /* Brand Colors - Dark Mode */
+  --primary: #6366f1;
+  --primary-hover: #7c3aed;
+  --primary-foreground: #ffffff;
+  
+  --secondary: #1e293b;
+  --secondary-hover: #334155;
+  --secondary-foreground: #94a3b8;
+  
+  /* Semantic Colors - Dark Mode */
+  --success: #22c55e;
+  --success-light: rgba(34, 197, 94, 0.1);
+  --warning: #f59e0b;
+  --warning-light: rgba(245, 158, 11, 0.1);
+  --error: #f87171;
+  --error-light: rgba(248, 113, 113, 0.1);
+  --info: #60a5fa;
+  --info-light: rgba(96, 165, 250, 0.1);
+  
+  /* Blood Theme - Dark Mode */
+  --blood: #f87171;
+  --blood-light: rgba(248, 113, 113, 0.1);
+  --blood-dark: #dc2626;
+  
+  /* Text Colors - Dark Mode */
+  --text-primary: #fafbfc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-inverse: #1a1d21;
+  
+  /* Borders - Dark Mode */
+  --border: #334155;
+  --border-strong: #475569;
+  --divider: #1e293b;
+  
+  /* Shadows - Dark Mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  
+  /* Interactive States - Dark Mode */
+  --hover-overlay: rgba(255, 255, 255, 0.08);
+  --active-overlay: rgba(255, 255, 255, 0.12);
+  --focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+@theme inline {
+  /* Core Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  
+  /* Brand Colors */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  /* Semantic Colors */
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-info: var(--info);
+  --color-info-light: var(--info-light);
+  
+  /* Blood Theme */
+  --color-blood: var(--blood);
+  --color-blood-light: var(--blood-light);
+  --color-blood-dark: var(--blood-dark);
+  
+  /* Text Colors */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-inverse: var(--text-inverse);
+  
+  /* Borders */
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-divider: var(--divider);
+  
+  /* Radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* Safe area support for mobile devices */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-pt {
+  padding-top: env(safe-area-inset-top);
+}
+
+
+
+/* Desktop-specific enhancements */
+@media (min-width: 1024px) {
+  /* Desktop hover effects */
+  .desktop-hover {
+    transition: all 0.2s ease;
+  }
+  
+  .desktop-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  /* Desktop-specific animations */
+  .desktop-float {
+    animation: desktopFloat 4s ease-in-out infinite;
+  }
+  
+  @keyframes desktopFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+  
+  /* Desktop sidebar animations */
+  .sidebar-item {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .sidebar-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+  }
+  
+  .sidebar-item:hover::before {
+    left: 100%;
+  }
+}
+
+
+
+/* Mobile-specific animations (reduced motion for performance) */
+@media (max-width: 768px) {
+  .floating-particles {
+    opacity: 0.6;
+  }
+  
+  .heart-particle, .pulse-particle, .blood-particle {
+    animation-duration: 12s; /* Slower for mobile performance */
+  }
+  
+  .gentle-float {
+    animation-duration: 4s; /* Slower gentle float on mobile */
+  }
+}
+
+/* Status bar and header styling */
+.status-bar {
+  height: env(safe-area-inset-top, 44px);
+}
+
+/* Smooth transitions for better UX */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+
+
+
+
+
+/* Modern Professional Utilities */
+
+/* Card System */
+@utility card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--card-padding);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+@utility card-elevated {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--card-padding);
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s ease;
+}
+
+@utility card-interactive {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--card-padding);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Button System */
+@utility btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 44px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@utility btn-secondary {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 44px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@utility btn-touch {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+/* Responsive button adjustments */
+@media (min-width: 768px) {
+  .btn-primary {
+    padding: 12px 24px;
+    font-size: 16px;
+    min-height: 40px;
+  }
+  
+  .btn-secondary {
+    padding: 12px 24px;
+    font-size: 16px;
+    min-height: 40px;
+  }
+  
+  .btn-touch {
+    min-height: 40px;
+    min-width: 40px;
+    padding: 10px;
+  }
+}
+
+/* Status Badges */
+@utility badge-success {
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+}
+
+@utility badge-warning {
+  background: var(--warning-light);
+  color: var(--warning);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+}
+
+@utility badge-error {
+  background: var(--error-light);
+  color: var(--error);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+}
+
+@utility badge-blood {
+  background: var(--blood-light);
+  color: var(--blood);
+  border: 1px solid var(--blood);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Layout Utilities */
+@utility container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--mobile-padding);
+}
+
+
+
+@utility section {
+  padding: var(--section-spacing) 0;
+}
+
+@utility surface {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+}
+
+@utility surface-elevated {
+  background: var(--surface-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Text Utilities */
+@utility text-primary {
+  color: var(--text-primary);
+}
+
+@utility text-secondary {
+  color: var(--text-secondary);
+}
+
+@utility text-tertiary {
+  color: var(--text-tertiary);
+}
+
+/* Interactive States */
+@utility interactive {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Hover states for custom utilities */
+.card-interactive:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+  background: var(--secondary-hover);
+  border-color: var(--border-strong);
+}
+
+.interactive:hover {
+  background: var(--hover-overlay);
+}
+
+.interactive:active {
+  background: var(--active-overlay);
+}
+
+/* Focus States */
+@utility focus-ring {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Modern Animations */
+@utility animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@utility animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@utility animate-scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Essential Animation Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Blood Donation Theme Animations */
+@keyframes floatingHeart {
+  0% {
+    transform: translateY(100vh) translateX(0) rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(90vh) translateX(10px) rotate(45deg) scale(1);
+  }
+  50% {
+    transform: translateY(50vh) translateX(20px) rotate(225deg) scale(1.1);
+  }
+  90% {
+    transform: translateY(10vh) translateX(30px) rotate(405deg) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(0) rotate(450deg) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseWave {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes bloodDropFloat {
+  0% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(50vh) translateX(50px);
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(100px);
+    opacity: 0;
+  }
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Background Particle Classes */
+.floating-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.heart-particle {
+  position: absolute;
+  color: rgba(220, 38, 38, 0.3);
+  animation: floatingHeart linear infinite;
+  pointer-events: none;
+}
+
+.pulse-particle {
+  position: absolute;
+  border: 2px solid rgba(220, 38, 38, 0.4);
+  border-radius: 50%;
+  animation: pulseWave ease-out infinite;
+  pointer-events: none;
+}
+
+.blood-particle {
+  position: absolute;
+  background: rgba(220, 38, 38, 0.4);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: bloodDropFloat linear infinite;
+  pointer-events: none;
+}
+
+.gentle-float {
+  animation: gentleFloat 3s ease-in-out infinite;
+}
+
+/* Subtle icon hover animation without rotation */
+@keyframes iconHover {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
+
+.icon-hover {
+  animation: iconHover 2s ease-in-out infinite;
+}
+
+/* Static gentle float for icons that shouldn't rotate */
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.icon-float {
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+.ekg-line {
+  background: rgba(220, 38, 38, 0.3);
+  animation: ekgPulse 2s infinite;
+  width: 100px;
+  position: absolute;
+}
+
+/* Abstract Web3 Background Animations */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(10px, -15px) scale(1.05); }
+  50% { transform: translate(-5px, -25px) scale(0.95); }
+  75% { transform: translate(-15px, -10px) scale(1.02); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(15px, -20px) scale(1.08); }
+  66% { transform: translate(-12px, -8px) scale(0.92); }
+}
+
+@keyframes float-fast {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8px, -12px) scale(1.1); }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes wave-slow {
+  0% { transform: translateX(-100%) skewY(12deg); }
+  100% { transform: translateX(100%) skewY(12deg); }
+}
+
+@keyframes wave-medium {
+  0% { transform: translateX(-100%) skewY(-6deg); }
+  100% { transform: translateX(100%) skewY(-6deg); }
+}
+
+@keyframes wave-fast {
+  0% { transform: translateX(-100%) skewY(3deg); }
+  100% { transform: translateX(100%) skewY(3deg); }
+}
+
+@keyframes particle-trail {
+  0% { 
+    transform: translate(0, 0) scale(0); 
+    opacity: 0; 
+  }
+  10% { 
+    transform: translate(10px, -10px) scale(1); 
+    opacity: 1; 
+  }
+  90% { 
+    transform: translate(100px, -50px) scale(0.5); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: translate(120px, -60px) scale(0); 
+    opacity: 0; 
+  }
+}
+
+/* Abstract Web3 Animation Classes */
+.animate-float-slow {
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-medium 12s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float-fast 8s ease-in-out infinite;
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 4s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 6s ease-in-out infinite;
+}
+
+.animate-wave-slow {
+  animation: wave-slow 25s linear infinite;
+}
+
+.animate-wave-medium {
+  animation: wave-medium 18s linear infinite;
+}
+
+.animate-wave-fast {
+  animation: wave-fast 12s linear infinite;
+}
+
+.animate-particle-trail {
+  animation: particle-trail 15s linear infinite;
+}
+
+/* Utility classes for gradients */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}

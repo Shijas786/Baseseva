@@ -1,0 +1,1 @@
+// This file has been removed - animated icons are no longer needed
