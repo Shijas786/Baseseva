@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Card } from './ui/card';
@@ -7,6 +7,7 @@ import { Button } from './ui/button';
 import * as Dialog from './ui/dialog';
 import { DarkHealthBackground } from './DarkHealthBackground';
 import { StatusPostingModal } from './StatusPostingModal';
+import { useData } from './DataContext';
 import { 
   MapPin, Clock, Droplets, Phone, X, TrendingUp, Heart, Search, Filter,
   AlertCircle, User, Calendar, Zap, Shield, Star, ArrowRight, Navigation, Plus
@@ -37,86 +38,72 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
   const [selectedRequest, setSelectedRequest] = useState<BloodRequest | null>(null);
   const [filter, setFilter] = useState<'all' | 'critical' | 'urgent' | 'normal'>('all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  
+  const { bloodRequests, createBloodRequest, refreshBloodRequests } = useData();
 
-  const requests: BloodRequest[] = [
-    {
-      id: '1',
-      name: 'Sarah Chen',
-      avatar: 'https://images.unsplash.com/photo-1709879057923-9f846b583154?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaXZlcnNlJTIwcGVvcGxlJTIwY29tbXVuaXR5fGVufDF8fHx8MTc1OTM1NjE2MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-      bloodType: 'O+',
-      city: 'New York',
-      timestamp: '2 hours ago',
-      timeLeft: '6 hours',
-      urgency: 'critical',
-      hospital: 'Mount Sinai Hospital',
-      contact: '+1 (555) 123-4567',
-      description: 'Emergency surgery needed. Patient in critical condition.',
-      unitsNeeded: 3,
-      distance: '2.1 km',
-      verified: true
-    },
-    {
-      id: '2',
-      name: 'Michael Rodriguez',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      bloodType: 'A-',
-      city: 'Brooklyn',
-      timestamp: '4 hours ago',
-      timeLeft: '12 hours',
-      urgency: 'urgent',
-      hospital: 'Brooklyn Methodist Hospital',
-      contact: '+1 (555) 987-6543',
-      description: 'Scheduled surgery tomorrow morning. Need compatible donors.',
-      unitsNeeded: 2,
-      distance: '5.4 km',
-      verified: true
-    },
-    {
-      id: '3',
-      name: 'Emma Johnson',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-      bloodType: 'B+',
-      city: 'Manhattan',
-      timestamp: '6 hours ago',
-      timeLeft: '18 hours',
-      urgency: 'normal',
-      hospital: 'NYU Langone Health',
-      contact: '+1 (555) 456-7890',
-      description: 'Upcoming procedure. Looking for willing donors in advance.',
-      unitsNeeded: 1,
-      distance: '3.7 km',
-      verified: true
-    },
-    {
-      id: '4',
-      name: 'David Kim',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
-      bloodType: 'AB-',
-      city: 'Queens',
-      timestamp: '8 hours ago',
-      timeLeft: '24 hours',
-      urgency: 'urgent',
-      hospital: 'Queens General Hospital',
-      contact: '+1 (555) 321-0987',
-      description: 'Rare blood type needed for upcoming transfusion.',
-      unitsNeeded: 2,
-      distance: '8.2 km',
-      verified: true
+  // Load blood requests on component mount
+  useEffect(() => {
+    refreshBloodRequests();
+  }, [refreshBloodRequests]);
+
+  // Convert API blood requests to local format
+  const requests: BloodRequest[] = bloodRequests.map(req => ({
+    id: req.id,
+    name: req.patient_name || 'Anonymous',
+    avatar: req.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(req.patient_name || 'User')}&background=dc2626&color=fff`,
+    bloodType: req.blood_type,
+    city: req.location || 'Unknown',
+    timestamp: new Date(req.created_at).toLocaleString(),
+    timeLeft: req.expires_at ? `${Math.ceil((new Date(req.expires_at).getTime() - Date.now()) / (1000 * 60 * 60))} hours` : 'Unknown',
+    urgency: req.urgency as 'critical' | 'urgent' | 'normal',
+    hospital: req.hospital_name || 'Local Hospital',
+    contact: req.contact_number || 'Contact not provided',
+    description: req.description || 'Blood donation needed',
+    unitsNeeded: req.units_needed || 1,
+    distance: req.distance ? `${req.distance} km` : undefined,
+    verified: req.verified || false
+  }));
+
+  const filteredRequests = requests.filter(req => {
+    const matchesFilter = filter === 'all' || req.urgency === filter;
+    const matchesSearch = !searchQuery || 
+      req.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      req.bloodType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      req.hospital.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      req.city.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  const handleCreateRequest = async (requestData: any) => {
+    try {
+      const success = await createBloodRequest({
+        patient_name: requestData.patientName,
+        blood_type: requestData.bloodType,
+        hospital_name: requestData.hospital,
+        contact_number: requestData.contact,
+        description: requestData.description,
+        urgency: requestData.urgency,
+        units_needed: requestData.unitsNeeded,
+        location: requestData.city || 'Unknown',
+        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours from now
+      });
+      
+      if (success) {
+        console.log('Blood request created successfully!');
+        setIsCreateModalOpen(false);
+        // Refresh the requests list
+        await refreshBloodRequests();
+      } else {
+        console.error('Failed to create blood request');
+        alert('Failed to create blood request. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating blood request:', error);
+      alert('Error creating blood request. Please try again.');
     }
-  ];
-
-  const filteredRequests = filter === 'all' 
-    ? requests 
-    : requests.filter(req => req.urgency === filter);
-
-  const handleCreateRequest = (requestData: any) => {
-    console.log('New blood request created:', requestData);
-    setIsCreateModalOpen(false);
-    // Here you would typically:
-    // 1. Send the request to your Supabase API
-    // 2. Add it to your local state
-    // 3. Show a success message
-    // For now, we'll just log it
   };
 
   const getUrgencyColor = (urgency: string) => {
@@ -155,6 +142,7 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
               <Button 
                 variant="outline" 
                 size="icon"
+                onClick={() => setShowSearch(!showSearch)}
                 className="w-10 h-10 rounded-full border-red-500/30 bg-black/20 backdrop-blur-sm text-red-300 hover:bg-red-500/10"
               >
                 <Search className="w-4 h-4" />
@@ -162,6 +150,7 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
               <Button 
                 variant="outline" 
                 size="icon"
+                onClick={() => setShowFilters(!showFilters)}
                 className="w-10 h-10 rounded-full border-red-500/30 bg-black/20 backdrop-blur-sm text-red-300 hover:bg-red-500/10"
               >
                 <Filter className="w-4 h-4" />
@@ -205,32 +194,57 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
             ))}
           </div>
 
-          {/* Filter Tabs */}
-          <div className="flex gap-2 overflow-x-auto">
-            {[
-              { key: 'all', label: 'All Requests', count: requests.length },
-              { key: 'critical', label: 'Critical', count: requests.filter(r => r.urgency === 'critical').length },
-              { key: 'urgent', label: 'Urgent', count: requests.filter(r => r.urgency === 'urgent').length },
-              { key: 'normal', label: 'Normal', count: requests.filter(r => r.urgency === 'normal').length }
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setFilter(tab.key as any)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all duration-300 ${
-                  filter === tab.key
-                    ? 'bg-red-500/20 text-red-400 border-red-400/30'
-                    : 'bg-black/20 text-red-200 border-red-500/20 hover:bg-red-500/10'
-                }`}
+          {/* Search Input */}
+          {showSearch && (
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search by name, blood type, hospital, or city..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 bg-black/20 backdrop-blur-sm border border-red-500/30 rounded-lg text-white placeholder-red-300 focus:outline-none focus:border-red-400"
+              />
+            </div>
+          )}
+
+          {/* Filter Options */}
+          {showFilters && (
+            <div className="mb-4 flex gap-2 flex-wrap">
+              <Button
+                variant={filter === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('all')}
+                className={filter === 'all' ? 'bg-red-600 text-white' : 'border-red-500/30 text-red-300'}
               >
-                <span>{tab.label}</span>
-                <Badge className={`${
-                  filter === tab.key ? 'bg-red-400/20 text-red-300' : 'bg-red-500/20 text-red-300'
-                } text-xs`}>
-                  {tab.count}
-                </Badge>
-              </button>
-            ))}
-          </div>
+                All ({requests.length})
+              </Button>
+              <Button
+                variant={filter === 'critical' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('critical')}
+                className={filter === 'critical' ? 'bg-red-600 text-white' : 'border-red-500/30 text-red-300'}
+              >
+                Critical ({requests.filter(r => r.urgency === 'critical').length})
+              </Button>
+              <Button
+                variant={filter === 'urgent' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('urgent')}
+                className={filter === 'urgent' ? 'bg-red-600 text-white' : 'border-red-500/30 text-red-300'}
+              >
+                Urgent ({requests.filter(r => r.urgency === 'urgent').length})
+              </Button>
+              <Button
+                variant={filter === 'normal' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('normal')}
+                className={filter === 'normal' ? 'bg-red-600 text-white' : 'border-red-500/30 text-red-300'}
+              >
+                Normal ({requests.filter(r => r.urgency === 'normal').length})
+              </Button>
+            </div>
+          )}
+
         </div>
       </div>
 
@@ -249,7 +263,10 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
               <div className="text-red-300 font-medium">Emergency Alert</div>
               <div className="text-red-200 text-sm">3 critical requests in your area need immediate attention</div>
             </div>
-            <Button className="bg-red-600 hover:bg-red-500 text-white border border-red-400/30">
+            <Button 
+              className="bg-red-600 hover:bg-red-500 text-white border border-red-400/30"
+              onClick={() => onNavigate('map')}
+            >
               <Navigation className="w-4 h-4 mr-2" />
               View Map
             </Button>
@@ -259,7 +276,25 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
 
       {/* Requests Feed */}
       <div className="relative z-10 p-6 space-y-4">
-        {filteredRequests.map((request) => (
+        {filteredRequests.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="w-24 h-24 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Heart className="w-12 h-12 text-red-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">No Blood Requests Found</h3>
+            <p className="text-red-200 mb-6">
+              {searchQuery ? 'No requests match your search criteria.' : 'Be the first to post a blood request in your area.'}
+            </p>
+            <Button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create First Request
+            </Button>
+          </div>
+        ) : (
+          filteredRequests.map((request) => (
           <div 
             key={request.id} 
             className="relative bg-black/20 backdrop-blur-xl border border-red-500/20 rounded-2xl p-6 shadow-2xl cursor-pointer hover:border-red-400/40 transition-all duration-300"
@@ -360,18 +395,9 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
               </div>
             </div>
           </div>
-        ))}
-
-        {filteredRequests.length === 0 && (
-          <div className="relative bg-black/20 backdrop-blur-xl border border-red-500/20 rounded-2xl p-8 shadow-2xl text-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/5 rounded-2xl"></div>
-            <div className="relative">
-              <Heart className="w-16 h-16 text-red-400 mx-auto mb-4 opacity-50" />
-              <h3 className="text-white font-medium mb-2">No {filter} requests found</h3>
-              <p className="text-red-200 text-sm">Check back later or try a different filter</p>
-            </div>
-          </div>
+        ))
         )}
+
       </div>
 
       {/* Request Detail Modal */}
@@ -456,6 +482,7 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
                 <div className="space-y-3">
                   <Button 
                     className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white border border-red-400/30"
+                    onClick={() => window.open(`tel:${selectedRequest.contact}`, '_self')}
                   >
                     <Phone className="w-4 h-4 mr-2" />
                     Call Hospital: {selectedRequest.contact}
