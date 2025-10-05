@@ -6,7 +6,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { DarkHealthBackground } from './DarkHealthBackground';
-import { WhatsAppStatusModal } from './WhatsAppStatusModal';
+import { StatusPostingModal } from './StatusPostingModal';
 import { 
   MapPin, Clock, Droplets, Phone, X, TrendingUp, Heart, Search, Filter,
   AlertCircle, User, Calendar, Zap, Shield, Star, ArrowRight, Navigation, Plus
@@ -151,15 +151,6 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
               <p className="text-red-200 text-sm">Help save lives in your community</p>
             </div>
             
-            {/* Create Request Button */}
-            <Button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg transition-all duration-200"
-            >
-              <Plus className="w-4 h-4" />
-              Create Request
-            </Button>
-            
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline" 
@@ -176,6 +167,42 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
                 <Filter className="w-4 h-4" />
               </Button>
             </div>
+          </div>
+          
+          {/* WhatsApp Status-style Request Circles */}
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {/* Create Request Circle (WhatsApp style) */}
+            <div className="flex flex-col items-center min-w-[70px]">
+              <Button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="w-16 h-16 rounded-full bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all duration-200 p-0 text-white mb-2"
+              >
+                <Plus className="w-6 h-6" />
+              </Button>
+              <span className="text-xs text-red-200 text-center leading-tight">
+                Add Request
+              </span>
+            </div>
+
+            {/* Existing Request Circles */}
+            {filteredRequests.slice(0, 8).map((request) => (
+              <div key={request.id} className="flex flex-col items-center min-w-[70px] cursor-pointer" onClick={() => setSelectedRequest(request)}>
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500/20 to-red-600/30 border-2 border-red-400/50 flex items-center justify-center mb-2 hover:border-red-400/80 transition-all duration-200">
+                    <span className="text-red-300 font-bold text-lg">{request.bloodType}</span>
+                  </div>
+                  
+                  {/* Urgency dot */}
+                  <div className={`absolute -top-1 -right-1 w-4 h-4 ${
+                    request.urgency === 'critical' ? 'bg-red-500' :
+                    request.urgency === 'urgent' ? 'bg-yellow-500' : 'bg-green-500'
+                  } rounded-full border-2 border-black shadow-sm`} />
+                </div>
+                <span className="text-xs text-red-200 text-center leading-tight truncate w-full">
+                  {request.name}
+                </span>
+              </div>
+            ))}
           </div>
 
           {/* Filter Tabs */}
@@ -450,7 +477,7 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
       )}
 
       {/* Create Request Modal */}
-      <WhatsAppStatusModal
+      <StatusPostingModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreateRequest}
