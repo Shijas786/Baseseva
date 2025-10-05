@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -135,9 +135,9 @@ export function StatusDetailsModal({ status, isOpen, onClose }: StatusDetailsMod
       <DialogContent className="max-w-md mx-auto bg-[var(--card)] border-[var(--glass-border)] backdrop-blur-xl p-0 overflow-hidden">
         <DialogHeader className="sr-only">
           <DialogTitle>Blood Request Details</DialogTitle>
-          <DialogDescription>
+          <div className="text-sm text-muted-foreground">
             View detailed information about this blood request including urgency, location, and contact details.
-          </DialogDescription>
+          </div>
         </DialogHeader>
         
         {/* Header with gradient */}

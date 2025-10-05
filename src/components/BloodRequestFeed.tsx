@@ -8,8 +8,7 @@ import {
   Dialog as DialogRoot,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogDescription
+  DialogTitle
 } from './ui/dialog';
 import { DarkHealthBackground } from './DarkHealthBackground';
 import { StatusPostingModal } from './StatusPostingModal';
@@ -414,9 +413,9 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
             <div className="relative">
               <DialogHeader>
                 <DialogTitle className="text-white text-xl">Blood Request Details</DialogTitle>
-                <DialogDescription className="text-red-200">
+                <div className="text-red-200 text-sm">
                   Review request information and contact details
-                </DialogDescription>
+                </div>
               </DialogHeader>
               
               <div className="space-y-6 mt-6">

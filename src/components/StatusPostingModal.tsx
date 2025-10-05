@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -102,9 +102,9 @@ export function StatusPostingModal({ isOpen, onClose, onSubmit }: StatusPostingM
             <AlertTriangle className="w-5 h-5" />
             Post Blood Request
           </DialogTitle>
-          <DialogDescription>
+          <div className="text-sm text-muted-foreground">
             Create a new blood request with your requirements and urgency level.
-          </DialogDescription>
+          </div>
         </DialogHeader>
 
         <div className="space-y-6 max-h-[70vh] overflow-y-auto">
