@@ -6,7 +6,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { DarkHealthBackground } from './DarkHealthBackground';
-import { StatusPostingModal } from './StatusPostingModal';
+import { WhatsAppStatusModal } from './WhatsAppStatusModal';
 import { 
   MapPin, Clock, Droplets, Phone, X, TrendingUp, Heart, Search, Filter,
   AlertCircle, User, Calendar, Zap, Shield, Star, ArrowRight, Navigation, Plus
@@ -450,7 +450,7 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
       )}
 
       {/* Create Request Modal */}
-      <StatusPostingModal
+      <WhatsAppStatusModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreateRequest}

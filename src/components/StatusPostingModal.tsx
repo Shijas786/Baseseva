@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -7,7 +7,7 @@ import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Badge } from './ui/badge';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { Camera, X, MapPin, Clock, AlertTriangle } from 'lucide-react';
+import { Camera, X, MapPin, Clock, AlertTriangle, Send, Droplets, User, Phone, Hospital, MessageSquare } from 'lucide-react';
 
 interface StatusPostingModalProps {
   isOpen: boolean;
@@ -24,14 +24,19 @@ const urgencyLevels = [
 
 export function StatusPostingModal({ isOpen, onClose, onSubmit }: StatusPostingModalProps) {
   const [formData, setFormData] = useState({
+    patientName: '',
     bloodType: '',
+    hospital: '',
+    contact: '',
     city: '',
     urgency: '',
     description: '',
+    unitsNeeded: 1,
     image: null as File | null
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [currentStep, setCurrentStep] = useState(1);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
