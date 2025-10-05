@@ -6,9 +6,10 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
 import { DarkHealthBackground } from './DarkHealthBackground';
+import { StatusPostingModal } from './StatusPostingModal';
 import { 
   MapPin, Clock, Droplets, Phone, X, TrendingUp, Heart, Search, Filter,
-  AlertCircle, User, Calendar, Zap, Shield, Star, ArrowRight, Navigation
+  AlertCircle, User, Calendar, Zap, Shield, Star, ArrowRight, Navigation, Plus
 } from 'lucide-react';
 
 interface BloodRequestFeedProps {
@@ -35,6 +36,7 @@ interface BloodRequest {
 export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
   const [selectedRequest, setSelectedRequest] = useState<BloodRequest | null>(null);
   const [filter, setFilter] = useState<'all' | 'critical' | 'urgent' | 'normal'>('all');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const requests: BloodRequest[] = [
     {
@@ -107,6 +109,16 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
     ? requests 
     : requests.filter(req => req.urgency === filter);
 
+  const handleCreateRequest = (requestData: any) => {
+    console.log('New blood request created:', requestData);
+    setIsCreateModalOpen(false);
+    // Here you would typically:
+    // 1. Send the request to your Supabase API
+    // 2. Add it to your local state
+    // 3. Show a success message
+    // For now, we'll just log it
+  };
+
   const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
       case 'critical': return 'bg-red-500/20 text-red-400 border-red-400/30';
@@ -138,6 +150,15 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
               <h1 className="text-2xl font-bold text-white mb-1">Blood Requests</h1>
               <p className="text-red-200 text-sm">Help save lives in your community</p>
             </div>
+            
+            {/* Create Request Button */}
+            <Button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow-lg transition-all duration-200"
+            >
+              <Plus className="w-4 h-4" />
+              Create Request
+            </Button>
             
             <div className="flex items-center gap-3">
               <Button 
@@ -427,6 +448,13 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Create Request Modal */}
+      <StatusPostingModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateRequest}
+      />
     </div>
   );
 }
