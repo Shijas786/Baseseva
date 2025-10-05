@@ -24,8 +24,12 @@ export function WalletConflictResolver() {
         message.includes('evmAsk.js') ||
         message.includes('inpage.js') ||
         message.includes('contentScript.ts') ||
+        message.includes('contentScript.js') ||
         message.includes('Cannot redefine property') ||
-        message.includes('TypeError: Cannot set property ethereum')
+        message.includes('TypeError: Cannot set property ethereum') ||
+        message.includes('window.addEventListener.once') ||
+        message.includes('inject @ evmAsk.js') ||
+        message.includes('await in window.addEventListener.once')
       ) {
         // Silently ignore these wallet extension conflicts
         return;
