@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import * as Dialog from './ui/dialog';
 import { DarkHealthBackground } from './DarkHealthBackground';
 import { StatusPostingModal } from './StatusPostingModal';
 import { 
@@ -376,16 +376,16 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
 
       {/* Request Detail Modal */}
       {selectedRequest && (
-        <Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
-          <DialogContent className="bg-black/40 backdrop-blur-xl border border-red-500/20 text-white max-w-md mx-auto">
+        <Dialog.Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
+          <Dialog.DialogContent className="bg-black/40 backdrop-blur-xl border border-red-500/20 text-white max-w-md mx-auto">
             <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-blue-500/5 rounded-2xl"></div>
             <div className="relative">
-              <DialogHeader>
-                <DialogTitle className="text-white text-xl">Blood Request Details</DialogTitle>
-                <DialogDescription className="text-red-200">
+              <Dialog.DialogHeader>
+                <Dialog.DialogTitle className="text-white text-xl">Blood Request Details</Dialog.DialogTitle>
+                <Dialog.DialogDescription className="text-red-200">
                   Review request information and contact details
-                </DialogDescription>
-              </DialogHeader>
+                </Dialog.DialogDescription>
+              </Dialog.DialogHeader>
               
               <div className="space-y-6 mt-6">
                 {/* Patient Info */}
@@ -472,8 +472,8 @@ export function BloodRequestFeed({ onNavigate }: BloodRequestFeedProps) {
                 </div>
               </div>
             </div>
-          </DialogContent>
-        </Dialog>
+          </Dialog.DialogContent>
+        </Dialog.Dialog>
       )}
 
       {/* Create Request Modal */}
