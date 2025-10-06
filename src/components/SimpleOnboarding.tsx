@@ -3,8 +3,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { 
-  Heart, ArrowRight, User, Mail, Droplets, MapPin, Check, Shield, 
-  Sparkles, Zap, Star, Globe, Lock, Award, ChevronRight
+  Heart, User, Mail, Droplets, MapPin, Sparkles, Lock
 } from 'lucide-react';
 
 interface SimpleOnboardingProps {
@@ -154,29 +153,6 @@ export function SimpleOnboarding({ onComplete }: SimpleOnboardingProps) {
                 </div>
               </div>
 
-              {/* Features Grid */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-400/20 rounded-xl p-4 text-center">
-                  <Shield className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                  <div className="text-blue-300 text-sm font-medium">Secure</div>
-                  <div className="text-blue-200/70 text-xs">Blockchain protected</div>
-                </div>
-                <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 border border-green-400/20 rounded-xl p-4 text-center">
-                  <Star className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                  <div className="text-green-300 text-sm font-medium">Reputation</div>
-                  <div className="text-green-200/70 text-xs">Earn NFT badges</div>
-                </div>
-                <div className="bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-400/20 rounded-xl p-4 text-center">
-                  <Award className="w-6 h-6 text-red-400 mx-auto mb-2" />
-                  <div className="text-red-300 text-sm font-medium">Certificates</div>
-                  <div className="text-red-200/70 text-xs">Verifiable proof</div>
-                </div>
-                <div className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-400/20 rounded-xl p-4 text-center">
-                  <Globe className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <div className="text-purple-300 text-sm font-medium">Global</div>
-                  <div className="text-purple-200/70 text-xs">Connect worldwide</div>
-                </div>
-              </div>
 
               {/* Privacy Notice */}
               <div className="bg-gradient-to-r from-cyan-500/10 to-cyan-500/5 border border-cyan-400/20 rounded-xl p-4">
@@ -219,20 +195,6 @@ export function SimpleOnboarding({ onComplete }: SimpleOnboardingProps) {
           {/* Footer */}
           <div className="text-center mt-8 text-red-200/60 text-sm">
             <p>By joining, you agree to our Terms of Service and Privacy Policy</p>
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <span className="flex items-center gap-2">
-                <Lock className="w-4 h-4" />
-                <span>Secure</span>
-              </span>
-              <span className="flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                <span>Private</span>
-              </span>
-              <span className="flex items-center gap-2">
-                <Heart className="w-4 h-4" />
-                <span>Life-saving</span>
-              </span>
-            </div>
           </div>
         </div>
       </div>
