@@ -35,13 +35,16 @@ export function SimpleOnboarding({ onComplete }: SimpleOnboardingProps) {
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-900">
       {/* jpeg.fun Inspired Background */}
       <JpegFunBackground />
       
+      {/* Mobile Fallback - Simple Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-600 to-blue-600 opacity-20"></div>
+      
       {/* Main Content Container */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <div className="w-full max-w-lg">
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6">
+        <div className="w-full max-w-lg bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
           {/* Logo & Brand Header */}
           <div className="text-center mb-10 animate-fade-in">
             <div className="relative w-20 h-20 mx-auto mb-6">

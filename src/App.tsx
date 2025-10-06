@@ -1,5 +1,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { SimpleOnboarding } from './components/SimpleOnboarding';
+import { MobileTest } from './components/MobileTest';
 import { HomeScreen } from './components/CleanHomeScreen';
 import { DonorProfileScreen } from './components/DonorProfileScreen';
 import { DonationUploadScreen } from './components/DonationUploadScreen';
@@ -139,7 +140,7 @@ function AppContent() {
   if (!isLoggedIn) {
     return (
       <ErrorBoundary>
-        <SimpleOnboarding onComplete={handleSignupComplete} />
+        <MobileTest />
         <MobileDebugger />
       </ErrorBoundary>
     );

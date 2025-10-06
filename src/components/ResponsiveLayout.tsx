@@ -280,8 +280,10 @@ export function ResponsiveLayout({
         <>
           <MobileHeader />
           <MobileSidebar />
-          <main className={`pt-16 pb-20 ${networkStatus === 'offline' ? 'pt-24' : ''}`}>
-            {children}
+          <main className={`pt-16 pb-20 min-h-screen ${networkStatus === 'offline' ? 'pt-24' : ''}`}>
+            <div className="w-full h-full">
+              {children}
+            </div>
           </main>
           <BottomNavigation activeScreen={currentScreen} onNavigate={onNavigate} />
         </>
@@ -301,17 +303,6 @@ export function ResponsiveLayout({
         </>
       )}
 
-      {/* Development Helper - Floating Signup Access Button */}
-      <button
-        onClick={() => {
-          localStorage.removeItem('baseSeva_session');
-          window.location.reload();
-        }}
-        className="fixed bottom-4 right-4 z-50 w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center font-bold text-xs"
-        title="Reset to Signup Screen"
-      >
-        🚀
-      </button>
     </div>
   );
 }
