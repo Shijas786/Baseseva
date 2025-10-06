@@ -142,7 +142,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
               }));
             },
             (error) => {
-              console.log('Geolocation error:', error.message);
+              // Only log if it's not a common permission error
+              if (error.code !== error.PERMISSION_DENIED) {
+                console.log('Geolocation error:', error.message);
+              }
               setAppData(prev => ({
                 ...prev,
                 locationPermission: 'denied'
@@ -175,7 +178,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
             }));
           },
           (error) => {
-            console.log('Geolocation fallback error:', error.message);
+            // Only log if it's not a common permission error
+            if (error.code !== error.PERMISSION_DENIED) {
+              console.log('Geolocation fallback error:', error.message);
+            }
             setAppData(prev => ({
               ...prev,
               locationPermission: 'denied'

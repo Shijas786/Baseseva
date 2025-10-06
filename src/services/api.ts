@@ -1,8 +1,15 @@
 // API Service Layer for BaseSeva
 // Handles all backend communication
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://your-supabase-project.supabase.co/functions/v1';
-const UPLOAD_BASE_URL = import.meta.env.VITE_UPLOAD_URL || 'https://your-supabase-project.supabase.co/functions/v1/upload';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://aulpvpzpkzfymnzmwxjq.supabase.co';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1bHB2cHpwa3pmbXluem13eGpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzNTYxNjAsImV4cCI6MjA3NDkzMjE2MH0.sbp_901569544f3bcb5509a50078dfae05cecb25ff8c';
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://aulpvpzpkzfymnzmwxjq.supabase.co/functions/v1';
+const UPLOAD_BASE_URL = import.meta.env.VITE_UPLOAD_URL || 'https://aulpvpzpkzfymnzmwxjq.supabase.co/functions/v1/upload';
 
 // Types
 export interface User {
@@ -163,14 +170,49 @@ export const bloodRequestsApi = {
     lng?: number;
     radius?: number;
   }): Promise<ApiResponse<{ requests: BloodRequest[] }>> {
-    const params = new URLSearchParams();
-    if (filters?.bloodType) params.append('bloodType', filters.bloodType);
-    if (filters?.lat) params.append('lat', filters.lat.toString());
-    if (filters?.lng) params.append('lng', filters.lng.toString());
-    if (filters?.radius) params.append('radius', filters.radius.toString());
+    try {
+      let query = supabase
+        .from('blood_requests')
+        .select(`
+          *,
+          users (
+            name,
+            blood_type,
+            city
+          )
+        `)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
 
-    const queryString = params.toString();
-    return apiCall(`/blood-requests${queryString ? `?${queryString}` : ''}`);
+      // Apply filters
+      if (filters?.bloodType) {
+        query = query.eq('blood_type', filters.bloodType);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Supabase error:', error);
+        return {
+          success: false,
+          error: error.message,
+          data: null
+        };
+      }
+
+      return {
+        success: true,
+        data: { requests: data || [] },
+        error: null
+      };
+    } catch (error) {
+      console.error('API error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        data: null
+      };
+    }
   },
 
   // Create blood request
@@ -187,10 +229,48 @@ export const bloodRequestsApi = {
     lng?: number;
     city?: string;
   }): Promise<ApiResponse<{ request: BloodRequest }>> {
-    return apiCall('/blood-requests', {
-      method: 'POST',
-      body: JSON.stringify(requestData),
-    });
+    try {
+      const { data, error } = await supabase
+        .from('blood_requests')
+        .insert([{
+          user_id: requestData.walletAddress,
+          patient_name: requestData.patientName,
+          blood_type: requestData.bloodType,
+          hospital_name: requestData.hospital,
+          contact_number: requestData.contact,
+          description: requestData.description || '',
+          units_needed: requestData.unitsNeeded || 1,
+          urgency: requestData.urgency || 'normal',
+          location: requestData.city || 'Unknown',
+          status: 'active',
+          verified: false,
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours from now
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        return {
+          success: false,
+          error: error.message,
+          data: null
+        };
+      }
+
+      return {
+        success: true,
+        data: { request: data },
+        error: null
+      };
+    } catch (error) {
+      console.error('API error:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        data: null
+      };
+    }
   },
 
   // Respond to blood request
