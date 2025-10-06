@@ -1,6 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
 import { SimpleOnboarding } from './components/SimpleOnboarding';
-import { MobileTest } from './components/MobileTest';
 import { HomeScreen } from './components/CleanHomeScreen';
 import { DonorProfileScreen } from './components/DonorProfileScreen';
 import { DonationUploadScreen } from './components/DonationUploadScreen';
@@ -13,7 +12,6 @@ import { PrivyProvider } from './components/PrivyProvider';
 import { usePrivyAuth } from './components/hooks/usePrivyAuth';
 import { ErrorBoundary, PageLoader } from './components/LoadingStates';
 import { WalletConflictResolver } from './components/WalletConflictResolver';
-import { MobileDebugger } from './components/MobileDebugger';
 
 function AppContent() {
   const [currentScreen, setCurrentScreen] = useState<'signup' | 'home' | 'feed' | 'map' | 'upload' | 'profile' | 'settings'>('signup');
@@ -117,21 +115,6 @@ function AppContent() {
     localStorage.removeItem('baseSeva_session');
   };
 
-  // Add development helper to reset to signup
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      // Press 'R' + 'S' to reset to signup screen (for testing)
-      if (e.key === 'R' && e.shiftKey && e.ctrlKey) {
-        localStorage.removeItem('baseSeva_session');
-        setIsLoggedIn(false);
-        setCurrentScreen('signup');
-        console.log('Reset to signup screen');
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
 
   if (isLoading) {
     return <PageLoader />;
@@ -140,8 +123,7 @@ function AppContent() {
   if (!isLoggedIn) {
     return (
       <ErrorBoundary>
-        <MobileTest />
-        <MobileDebugger />
+        <SimpleOnboarding onComplete={handleSignupComplete} />
       </ErrorBoundary>
     );
   }
@@ -164,7 +146,6 @@ function AppContent() {
           </div>
         </Suspense>
       </ResponsiveLayout>
-      <MobileDebugger />
     </ErrorBoundary>
   );
 }

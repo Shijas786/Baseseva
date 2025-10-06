@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { JpegFunBackground } from './JpegFunBackground';
 import { 
   Heart, ArrowRight, User, Mail, Droplets, MapPin, Check, Shield, 
   Sparkles, Zap, Star, Globe, Lock, Award, ChevronRight
@@ -35,20 +34,16 @@ export function SimpleOnboarding({ onComplete }: SimpleOnboardingProps) {
   const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-red-900">
-      {/* jpeg.fun Inspired Background */}
-      <JpegFunBackground />
-      
-      {/* Mobile Fallback - Simple Background */}
+    <div className="min-h-screen relative bg-gradient-to-br from-blue-900 via-blue-800 to-red-900">
+      {/* Simple Background for better mobile performance */}
       <div className="absolute inset-0 bg-gradient-to-br from-red-600 to-blue-600 opacity-20"></div>
       
       {/* Main Content Container */}
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-lg bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
           {/* Logo & Brand Header */}
-          <div className="text-center mb-10 animate-fade-in">
+          <div className="text-center mb-10">
             <div className="relative w-20 h-20 mx-auto mb-6">
-              <div className="absolute inset-0 bg-red-500/30 rounded-3xl blur-2xl animate-pulse"></div>
               <div className="relative w-20 h-20 bg-gradient-to-r from-red-600 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl border border-red-400/30">
                 <Heart className="w-10 h-10 text-white fill-white" />
               </div>

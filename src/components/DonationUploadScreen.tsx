@@ -204,16 +204,16 @@ export function DonationUploadScreen({ onNavigate }: DonationUploadScreenProps) 
             
             <div>
               <h2 className="text-2xl font-bold text-white mb-2">Pending Verification</h2>
-              <p className="text-yellow-200">Our AI is analyzing your donation proof</p>
+              <p className="text-yellow-200">Our team will manually verify your donation proof</p>
             </div>
 
             <div className="relative bg-black/20 backdrop-blur-xl border border-yellow-500/20 rounded-2xl p-6 shadow-xl">
               <div className="relative space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-yellow-200">Document Analysis</span>
+                  <span className="text-yellow-200">Manual Review</span>
                   <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-400/30">
                     <AlertCircle className="w-3 h-3 mr-1" />
-                    Processing
+                    Under Review
                   </Badge>
                 </div>
                 
@@ -232,7 +232,7 @@ export function DonationUploadScreen({ onNavigate }: DonationUploadScreenProps) 
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-white border border-yellow-400/30"
                 >
                   <Shield className="w-4 h-4 mr-2" />
-                  Verify Donation (Demo)
+                  Simulate Manual Verification
                 </Button>
               </div>
             </div>
