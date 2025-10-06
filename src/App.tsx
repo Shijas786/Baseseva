@@ -12,6 +12,7 @@ import { PrivyProvider } from './components/PrivyProvider';
 import { usePrivyAuth } from './components/hooks/usePrivyAuth';
 import { ErrorBoundary, PageLoader } from './components/LoadingStates';
 import { WalletConflictResolver } from './components/WalletConflictResolver';
+import { MobileDebugger } from './components/MobileDebugger';
 
 function AppContent() {
   const [currentScreen, setCurrentScreen] = useState<'signup' | 'home' | 'feed' | 'map' | 'upload' | 'profile' | 'settings'>('signup');
@@ -139,6 +140,7 @@ function AppContent() {
     return (
       <ErrorBoundary>
         <SimpleOnboarding onComplete={handleSignupComplete} />
+        <MobileDebugger />
       </ErrorBoundary>
     );
   }
@@ -161,6 +163,7 @@ function AppContent() {
           </div>
         </Suspense>
       </ResponsiveLayout>
+      <MobileDebugger />
     </ErrorBoundary>
   );
 }
