@@ -7,9 +7,9 @@ import { SimpleBloodRequestFeed } from './components/SimpleBloodRequestFeed';
 import { BloodBanksMap } from './components/BloodBanksMap';
 import { SettingsScreen } from './components/SettingsScreen';
 import { ResponsiveLayout } from './components/ResponsiveLayout';
-import { DataProvider, useData } from './components/DataContext';
-import { PrivyProvider } from './components/PrivyProvider';
-import { usePrivyAuth } from './components/hooks/usePrivyAuth';
+import { DataProvider } from './components/DataContext';
+import { WagmiProvider } from './components/WagmiProvider';
+import { useAccount } from 'wagmi';
 import { ErrorBoundary, PageLoader } from './components/LoadingStates';
 import { WalletConflictResolver } from './components/WalletConflictResolver';
 
@@ -17,29 +17,18 @@ const AppContent = memo(() => {
   const [currentScreen, setCurrentScreen] = useState<'signup' | 'home' | 'feed' | 'map' | 'upload' | 'profile' | 'settings'>('signup');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  // const { appData, syncData } = useData();
-  const { isAuthenticated, ready, hasWallet, hasSmartWallet } = usePrivyAuth();
+  const { address, isConnected } = useAccount();
 
   // Initialize app
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Wait for Privy to be ready
-        if (!ready) return;
-
-        // Check authentication state (more permissive in development)
+        // Check authentication state
         const savedSession = localStorage.getItem('baseSeva_session');
-        if (savedSession) {
+        if (savedSession || isConnected) {
           setIsLoggedIn(true);
           setCurrentScreen('home');
         }
-        
-        // In production with real Privy:
-        // if (isAuthenticated && hasWallet && hasSmartWallet) {
-        //   setIsLoggedIn(true);
-        //   setCurrentScreen('home');
-        //   localStorage.setItem('baseSeva_session', 'true');
-        // }
 
         // Request notification permission
         if ('Notification' in window && Notification.permission === 'default') {
@@ -70,11 +59,6 @@ const AppContent = memo(() => {
           }
         }
 
-        // Sync data if online
-        if (appData.isOnline) {
-          await syncData();
-        }
-
       } catch (error) {
         console.error('App initialization error:', error);
       } finally {
@@ -83,7 +67,7 @@ const AppContent = memo(() => {
     };
 
     initializeApp();
-  }, [ready, isAuthenticated, hasWallet, hasSmartWallet]);
+  }, [isConnected, isLoggedIn]);
 
   // Handle app state changes
   // useEffect(() => {
@@ -98,8 +82,6 @@ const AppContent = memo(() => {
   // }, [appData.isOnline, syncData]);
 
   const handleSignupComplete = useCallback(() => {
-    // In mock mode, allow completion without full wallet setup
-    // In production, this would require: isAuthenticated && hasWallet && hasSmartWallet
     setIsLoggedIn(true);
     setCurrentScreen('home');
     localStorage.setItem('baseSeva_session', 'true');
@@ -152,11 +134,11 @@ const AppContent = memo(() => {
 
 export default function App() {
   return (
-    <PrivyProvider>
+    <WagmiProvider>
       <DataProvider>
         <WalletConflictResolver />
         <AppContent />
       </DataProvider>
-    </PrivyProvider>
+    </WagmiProvider>
   );
 }

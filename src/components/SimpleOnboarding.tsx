@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { useConnect, useAccount } from 'wagmi';
 import { 
-  Heart, User, Mail, Droplets, MapPin, Sparkles, Lock
+  Heart, User, Mail, Droplets, MapPin, Sparkles, Wallet
 } from 'lucide-react';
 
 interface SimpleOnboardingProps {
@@ -16,14 +17,31 @@ export function SimpleOnboarding({ onComplete }: SimpleOnboardingProps) {
   const [bloodType, setBloodType] = useState('');
   const [city, setCity] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { connect, connectors } = useConnect();
+  const { isConnected } = useAccount();
 
   const handleComplete = async () => {
     if (!isFormValid()) return;
     
     setIsLoading(true);
-    // Simulate account creation
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    onComplete();
+    
+    try {
+      // Connect wallet via Farcaster Mini App if available
+      const farcasterConnector = connectors[0]; // Farcaster connector should be first
+      if (farcasterConnector && !isConnected) {
+        await connect({ connector: farcasterConnector });
+      }
+      
+      // Complete onboarding
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      onComplete();
+    } catch (error) {
+      console.error('Wallet connection error:', error);
+      // Continue anyway for development
+      onComplete();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isFormValid = () => {
