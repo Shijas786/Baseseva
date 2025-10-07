@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback, memo } from 'react';
 import { SimpleOnboarding } from './components/SimpleOnboarding';
 import { HomeScreen } from './components/CleanHomeScreen';
 import { DonorProfileScreen } from './components/DonorProfileScreen';
@@ -13,7 +13,7 @@ import { usePrivyAuth } from './components/hooks/usePrivyAuth';
 import { ErrorBoundary, PageLoader } from './components/LoadingStates';
 import { WalletConflictResolver } from './components/WalletConflictResolver';
 
-function AppContent() {
+const AppContent = memo(() => {
   const [currentScreen, setCurrentScreen] = useState<'signup' | 'home' | 'feed' | 'map' | 'upload' | 'profile' | 'settings'>('signup');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -97,17 +97,17 @@ function AppContent() {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [appData.isOnline, syncData]);
 
-  const handleSignupComplete = () => {
+  const handleSignupComplete = useCallback(() => {
     // In mock mode, allow completion without full wallet setup
     // In production, this would require: isAuthenticated && hasWallet && hasSmartWallet
     setIsLoggedIn(true);
     setCurrentScreen('home');
     localStorage.setItem('baseSeva_session', 'true');
-  };
+  }, []);
 
-  const handleNavigate = (screen: string) => {
+  const handleNavigate = useCallback((screen: string) => {
     setCurrentScreen(screen as any);
-  };
+  }, []);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -148,7 +148,7 @@ function AppContent() {
       </ResponsiveLayout>
     </ErrorBoundary>
   );
-}
+});
 
 export default function App() {
   return (

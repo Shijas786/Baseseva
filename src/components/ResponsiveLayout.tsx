@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import { useIsMobile, useIsDesktop } from './hooks/useMediaQuery';
 import { BottomNavigation } from './BottomNavigation';
 import { 
@@ -21,12 +21,12 @@ interface ResponsiveLayoutProps {
   networkStatus?: 'online' | 'offline' | 'slow';
 }
 
-export function ResponsiveLayout({ 
+export const ResponsiveLayout = memo(({ 
   currentScreen, 
   onNavigate, 
   children, 
   networkStatus 
-}: ResponsiveLayoutProps) {
+}: ResponsiveLayoutProps) => {
   const isMobile = useIsMobile();
   const isDesktop = useIsDesktop();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -81,6 +81,14 @@ export function ResponsiveLayout({
     setSidebarOpen(false);
   }, [currentScreen]);
 
+  const handleNavigate = useCallback((screen: string) => {
+    onNavigate(screen);
+  }, [onNavigate]);
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen(prev => !prev);
+  }, []);
+
   // Desktop Sidebar Component
   const DesktopSidebar = () => (
     <div className="fixed left-0 top-0 h-full w-64 bg-white/95 backdrop-blur-sm border-r border-gray-200 shadow-lg z-40 flex flex-col">
@@ -106,11 +114,11 @@ export function ResponsiveLayout({
           return (
             <button
               key={item.id}
-              onClick={() => onNavigate(item.id)}
+              onClick={() => handleNavigate(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-left ${
                 isActive
-                  ? 'bg-blood text-white shadow-md'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-blood'
+                  ? 'bg-red-600 text-white shadow-md'
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-red-600'
               }`}
             >
               <Icon className={`w-5 h-5 ${isActive ? 'text-white' : item.color}`} />
@@ -147,8 +155,9 @@ export function ResponsiveLayout({
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center touch-friendly"
+            onClick={toggleSidebar}
+            className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center touch-manipulation"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <Menu className="w-5 h-5 text-gray-700" />
           </button>
@@ -162,8 +171,9 @@ export function ResponsiveLayout({
             <Bell className="w-5 h-5 text-gray-700" />
           </button>
           <button 
-            onClick={() => onNavigate('profile')}
-            className="w-10 h-10 rounded-xl bg-blood flex items-center justify-center touch-friendly"
+            onClick={() => handleNavigate('profile')}
+            className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center touch-manipulation"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <User className="w-5 h-5 text-white" />
           </button>
@@ -200,7 +210,8 @@ export function ResponsiveLayout({
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center touch-friendly"
+            className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center touch-manipulation"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <X className="w-5 h-5 text-gray-700" />
           </button>
@@ -216,14 +227,15 @@ export function ResponsiveLayout({
               <button
                 key={item.id}
                 onClick={() => {
-                  onNavigate(item.id);
+                  handleNavigate(item.id);
                   setSidebarOpen(false);
                 }}
-                className={`w-full flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 text-left touch-friendly ${
+                className={`w-full flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 text-left touch-manipulation ${
                   isActive
-                    ? 'bg-blood text-white shadow-md'
+                    ? 'bg-red-600 text-white shadow-md'
                     : 'text-gray-700 hover:bg-gray-50 active:bg-gray-100'
                 }`}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <Icon className={`w-6 h-6 ${isActive ? 'text-white' : item.color}`} />
                 <div className="flex-1">
@@ -285,7 +297,7 @@ export function ResponsiveLayout({
               {children}
             </div>
           </main>
-          <BottomNavigation activeScreen={currentScreen} onNavigate={onNavigate} />
+          <BottomNavigation activeScreen={currentScreen} onNavigate={handleNavigate} />
         </>
       )}
 
@@ -299,10 +311,10 @@ export function ResponsiveLayout({
               {children}
             </div>
           </main>
-          <BottomNavigation activeScreen={currentScreen} onNavigate={onNavigate} />
+          <BottomNavigation activeScreen={currentScreen} onNavigate={handleNavigate} />
         </>
       )}
 
     </div>
   );
-}
+});
