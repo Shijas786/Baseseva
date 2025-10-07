@@ -1,9 +1,9 @@
 import { useState, useEffect, Suspense, useCallback, memo } from 'react';
 import { SimpleOnboarding } from './components/SimpleOnboarding';
-import { HomeScreen } from './components/CleanHomeScreen';
+import { SimpleHomeScreen } from './components/SimpleHomeScreen';
 import { DonorProfileScreen } from './components/DonorProfileScreen';
 import { DonationUploadScreen } from './components/DonationUploadScreen';
-import { BloodRequestFeed } from './components/BloodRequestFeed';
+import { SimpleBloodRequestFeed } from './components/SimpleBloodRequestFeed';
 import { BloodBanksMap } from './components/BloodBanksMap';
 import { SettingsScreen } from './components/SettingsScreen';
 import { ResponsiveLayout } from './components/ResponsiveLayout';
@@ -17,7 +17,7 @@ const AppContent = memo(() => {
   const [currentScreen, setCurrentScreen] = useState<'signup' | 'home' | 'feed' | 'map' | 'upload' | 'profile' | 'settings'>('signup');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { appData, syncData } = useData();
+  // const { appData, syncData } = useData();
   const { isAuthenticated, ready, hasWallet, hasSmartWallet } = usePrivyAuth();
 
   // Initialize app
@@ -86,16 +86,16 @@ const AppContent = memo(() => {
   }, [ready, isAuthenticated, hasWallet, hasSmartWallet]);
 
   // Handle app state changes
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && appData.isOnline) {
-        syncData();
-      }
-    };
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (document.visibilityState === 'visible' && appData.isOnline) {
+  //       syncData();
+  //     }
+  //   };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [appData.isOnline, syncData]);
+  //   document.addEventListener('visibilitychange', handleVisibilityChange);
+  //   return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  // }, [appData.isOnline, syncData]);
 
   const handleSignupComplete = useCallback(() => {
     // In mock mode, allow completion without full wallet setup
@@ -133,12 +133,12 @@ const AppContent = memo(() => {
       <ResponsiveLayout 
         currentScreen={currentScreen} 
         onNavigate={handleNavigate}
-        networkStatus={appData.networkStatus}
+        networkStatus="online"
       >
         <Suspense fallback={<PageLoader />}>
           <div className="animate-fade-in">
-            {currentScreen === 'home' && <HomeScreen onNavigate={handleNavigate} />}
-            {currentScreen === 'feed' && <BloodRequestFeed onNavigate={handleNavigate} />}
+            {currentScreen === 'home' && <SimpleHomeScreen onNavigate={handleNavigate} />}
+            {currentScreen === 'feed' && <SimpleBloodRequestFeed onNavigate={handleNavigate} />}
             {currentScreen === 'map' && <BloodBanksMap onNavigate={handleNavigate} />}
             {currentScreen === 'upload' && <DonationUploadScreen onNavigate={handleNavigate} />}
             {currentScreen === 'profile' && <DonorProfileScreen onNavigate={handleNavigate} />}
